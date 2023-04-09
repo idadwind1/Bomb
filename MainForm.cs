@@ -1,29 +1,20 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Media;
 using System.Reflection;
-using System.Resources;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Media;
-using static Boom.Form1;
 
-namespace Boom
+namespace Bomb
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -66,7 +57,7 @@ namespace Boom
             textBox1.BackColor = SystemColors.Control;
             try
             {
-                textBox1.Text = int.Parse(textBox1.Text).ToString().PadLeft(3, '0');
+                textBox1.Text = int.Parse(textBox1.Text).ToString().PadLeft(4, '0');
                 label5.Text = textBox1.Text;
             }
             catch { }
@@ -116,19 +107,20 @@ namespace Boom
             int t = int.Parse(textBox1.Text);
             if (t < 18)
             {
-                PlaySound(Properties.Resources.Countdown2, t - 3);
-                if (t < 10) backgroundWorker2.RunWorkerAsync();
+                PlaySound(Properties.Resources.Countdown2, t);
+                if (t <= 10) backgroundWorker2.RunWorkerAsync();
             }
             backgroundWorker3.RunWorkerAsync();
-            for (int i = 1; i < t+1; i++)
+            for (int i = 1; i < t + 1; i++)
             {
-                if (t - i > 17) PlaySound(Properties.Resources.Countdown, 0);
-                SetText2Label5((t - i).ToString().PadLeft(3, '0'));
-                notifyIcon1.Text = (t - i).ToString().PadLeft(3, '0') + "s";
-                switch (t - i)
+                int r = t - i;
+                if (r > 17) PlaySound(Properties.Resources.Countdown);
+                SetText2Label5(r.ToString().PadLeft(4, '0'));
+                notifyIcon1.Text = r.ToString().PadLeft(4, '0') + "s";
+                switch (r)
                 {
                     case 0:
-                        ForeColor = System.Drawing.Color.Red;
+                        ForeColor = Color.Red;
                         label2.Text += "d";
                         notifyIcon1.Text = "Exploded";
                         break;
@@ -136,28 +128,32 @@ namespace Boom
                         backgroundWorker2.RunWorkerAsync();
                         break;
                     case 17:
-                        PlaySound(Properties.Resources.Countdown2, 0);
+                        PlaySound(Properties.Resources.Countdown2);
                         break;
                 }
                 Thread.Sleep(1000);
             }
-            BSoD();
+            //BSoD();
             Environment.Exit(0);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MusicPlayer.Stop("countdown");
-            MusicPlayer.Close("countdown");
-            if (button1.Enabled) return;
-            notifyIcon1.Visible = true;
             Hide();
+            if (button1.Enabled)
+            {
+                MusicPlayer.Stop("countdown");
+                MusicPlayer.Close("countdown");
+                return;
+            }
+            notifyIcon1.Visible = true;
+            notifyIcon1.ShowBalloonTip(5000);
             e.Cancel = true;
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         { Show(); }
-        
+
         private void ShakeWindow()
         {
             Random ran = new Random((int)DateTime.Now.Ticks);
@@ -418,7 +414,7 @@ namespace Boom
                                 SetCursorPos(newPosition.X, newPosition.Y);
                                 Thread.Sleep(20);
                             }
-                            SetCursorPos(oldPosition.X, oldPosition.Y); 
+                            SetCursorPos(oldPosition.X, oldPosition.Y);
                         }
                     }
                 }
@@ -529,17 +525,30 @@ namespace Boom
             /// <param name="alias">音乐别名</param>
             public static void Play(string alias)
             { mciSendString(@"play " + alias, null, 0, 0); }
-        }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //WindowShaker.ShakeAllWindows();
-            string path = Environment.GetEnvironmentVariable("tmp") + "\\countdown.wav";
-            ExtractFile(Properties.Resources.Countdown2, path);
-            MusicPlayer musicPlayer = new MusicPlayer("countdown");
-            musicPlayer.Open(path);
-            musicPlayer.JumpTo(10*1000);
-            musicPlayer.Play((uint)Handle);
+            /// <summary>
+            /// 获取音乐长度
+            /// </summary>
+            public long GetMusicLength()
+            {
+                string length = "";
+                mciSendString("status " + alias + " length", length, 128, 0);
+                length = length.Trim();
+                if (string.IsNullOrEmpty(length)) return 0;
+                return Convert.ToInt64(length);
+            }
+            /// <summary>
+            /// 获取音乐长度
+            /// </summary>
+            /// <param name="alias">音乐别名</param>
+            public static long GetMusicLength(string alias)
+            {
+                string length = "";
+                mciSendString("status " + alias + " length", length, 128, 0);
+                length = length.Trim();
+                if (string.IsNullOrEmpty(length)) return 0;
+                return Convert.ToInt64(length);
+            }
         }
 
         protected override void DefWndProc(ref Message m)
@@ -553,7 +562,7 @@ namespace Boom
             }
         }
 
-        private void PlaySound(UnmanagedMemoryStream resource, int start_at)
+        private void PlaySound(UnmanagedMemoryStream resource, double start_at = -1)
         {
             MusicPlayer musicPlayer = new MusicPlayer("countdown");
             musicPlayer.Stop();
@@ -561,8 +570,8 @@ namespace Boom
             string path = Environment.GetEnvironmentVariable("tmp") + "\\sound.wav";
             ExtractFile(resource, path);
             musicPlayer.Open(path);
-            musicPlayer.JumpTo(start_at * 1000);
-            musicPlayer.Play((uint)Handle);
+            if (start_at != -1) musicPlayer.JumpTo(18300 - (long)(start_at * 1000));
+            musicPlayer.Play((uint)Handle);   
         }
     }
 }
