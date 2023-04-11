@@ -20,7 +20,7 @@ namespace Bomb
         }
 
         [DllImport("ntdll.dll", SetLastError = true)]
-        private static extern void RtlSetProcessIsCritical(UInt32 v1, UInt32 v2, UInt32 v3);
+        private static extern void RtlSetProcessIsCritical(int v1, UInt32 v2, UInt32 v3);
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -101,9 +101,6 @@ namespace Bomb
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            //MediaPlayer media = new MediaPlayer();
-            //ExtractFile("Countdown", Environment.GetEnvironmentVariable("tmp") + "\\" + "countdown.wav");
-            //media.Open(new Uri("file:\\\\\\" + Environment.GetEnvironmentVariable("tmp") + "\\" + "countdown.wav"));
             int t = int.Parse(textBox1.Text);
             if (t < 18)
             {
@@ -114,6 +111,7 @@ namespace Bomb
             for (int i = 1; i < t + 1; i++)
             {
                 int r = t - i;
+                label5.Tag = r;
                 if (r > 17) PlaySound(Properties.Resources.Countdown);
                 SetText2Label5(r.ToString().PadLeft(4, '0'));
                 notifyIcon1.Text = r.ToString().PadLeft(4, '0') + "s";
@@ -133,7 +131,7 @@ namespace Bomb
                 }
                 Thread.Sleep(1000);
             }
-            BSoD();
+            //BSoD();
             Environment.Exit(0);
         }
 
@@ -151,9 +149,6 @@ namespace Bomb
             e.Cancel = true;
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
-        { Show(); }
-
         private void ShakeWindow()
         {
             Random ran = new Random((int)DateTime.Now.Ticks);
@@ -169,8 +164,9 @@ namespace Bomb
         {
             while (true)
             {
-                WindowShaker.ShakeCurrentWindows();
-                WindowShaker.ShakeMouse();
+                bool b = (int)label5.Tag <= 5;
+                WindowShaker.ShakeCurrentWindows(b);
+                WindowShaker.ShakeMouse(b);
             }
         }
 
@@ -178,12 +174,12 @@ namespace Bomb
         {
             while (true)
             {
-                BackColor = System.Drawing.Color.FromArgb(204, 2, 2);
+                BackColor = Color.FromArgb(204, 2, 2);
                 panel1.BackColor = SystemColors.Control;
                 Thread.Sleep(250);
                 BackColor = SystemColors.Control;
                 Thread.Sleep(250);
-                BackColor = System.Drawing.Color.FromArgb(238, 210, 2);
+                BackColor = Color.FromArgb(238, 210, 2);
                 panel1.BackColor = SystemColors.Control;
                 Thread.Sleep(250);
                 BackColor = SystemColors.Control;
@@ -193,10 +189,11 @@ namespace Bomb
 
         public static class WindowShaker
         {
-            public static void ShakeMouse()
+            public static void ShakeMouse(bool ex = false)
             {
+                int Ex = 2;
                 Random random = new Random();
-                Size newPosition = new Size(random.Next(-10, 10), random.Next(-10, 10));
+                Size newPosition = new Size(random.Next(-10 * (ex ? Ex : 1), 10 * (ex ? Ex : 1)), random.Next(-10 * (ex ? Ex : 1), 10 * (ex ? Ex : 1)));
                 Point oldPosition = Cursor.Position;
                 Cursor.Position = Point.Add(Cursor.Position, newPosition);
                 Thread.Sleep(20);
@@ -217,8 +214,10 @@ namespace Bomb
                 public int Bottom;
             }
 
-            public static void ShakeCurrentWindows()
+            public static void ShakeCurrentWindows(bool ex = false)
             {
+                int Ex = 5;
+
                 Random random = new Random();
 
                 foreach (var form in Application.OpenForms)
@@ -228,8 +227,8 @@ namespace Bomb
                     GetWindowRect(handle, out rect);
                     int width = rect.Right - rect.Left;
                     int height = rect.Bottom - rect.Top;
-                    int newX = random.Next(-10, 10);
-                    int newY = random.Next(-10, 10);
+                    int newX = random.Next(-10 * (ex ? Ex : 1), 10 * (ex ? Ex : 1));
+                    int newY = random.Next(-10 * (ex ? Ex : 1), 10 * (ex ? Ex : 1));
                     MoveWindow(handle, rect.Left + newX, rect.Top + newY, width, height, true);
                     Thread.Sleep(20);
                     MoveWindow(handle, rect.Left, rect.Top, width, height, true);
@@ -388,6 +387,12 @@ namespace Bomb
             musicPlayer.Open(path);
             if (start_at != -1) musicPlayer.JumpTo(18300 - (long)(start_at * 1000));
             musicPlayer.Play((uint)Handle);   
+        }
+
+        private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            notifyIcon1.Visible = false;
         }
     }
 }
