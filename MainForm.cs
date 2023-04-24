@@ -137,7 +137,7 @@ namespace Bomb
                 }
                 Thread.Sleep(1000);
             }
-            //BSoD();
+            BSoD();
             Environment.Exit(0);
         }
 
