@@ -12,10 +12,15 @@ namespace Bomb
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            if (args.Length == 1 && int.TryParse(args[0], out int time))
+            {
+                Application.Run(new MainForm(time));
+                return;
+            }
             Application.Run(new MainForm());
         }
     }

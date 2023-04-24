@@ -18,6 +18,12 @@ namespace Bomb
         {
             InitializeComponent();
         }
+        public MainForm(int time)
+        {
+            InitializeComponent();
+            textBox1.Text = time.ToString();
+            button1_Click(this, new EventArgs());
+        }
 
         [DllImport("ntdll.dll", SetLastError = true)]
         private static extern void RtlSetProcessIsCritical(int v1, UInt32 v2, UInt32 v3);
@@ -131,7 +137,7 @@ namespace Bomb
                 }
                 Thread.Sleep(1000);
             }
-            BSoD();
+            //BSoD();
             Environment.Exit(0);
         }
 
