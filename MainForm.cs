@@ -14,15 +14,27 @@ namespace Bomb
 {
     public partial class MainForm : Form
     {
+        public int time = 20;
+
         public MainForm()
         {
             InitializeComponent();
         }
+
         public MainForm(int time)
         {
             InitializeComponent();
+            this.time = time;
             textBox1.Text = time.ToString();
             button1_Click(this, new EventArgs());
+        }
+
+        public bool as_dialog = false;
+
+        public MainForm(bool as_dialog)
+        {
+            InitializeComponent();
+            this.as_dialog = as_dialog;
         }
 
         [DllImport("ntdll.dll", SetLastError = true)]
@@ -41,6 +53,11 @@ namespace Bomb
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (as_dialog)
+            {
+                DialogResult = DialogResult.OK;
+                return;
+            }
             button1.Text = "Activated";
             label3.Text = "After";
             label2.Text = "Explode";
@@ -81,7 +98,7 @@ namespace Bomb
         /// </summary>
         /// <param name="resource">要求保存的UnmanagedMemoryStream</param>
         /// <param name="path">释放到位置</param>
-        private void ExtractFile(UnmanagedMemoryStream resource, string path)
+        private static void ExtractFile(UnmanagedMemoryStream resource, string path)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             BufferedStream input = new BufferedStream(resource);
@@ -110,7 +127,7 @@ namespace Bomb
             int t = int.Parse(textBox1.Text);
             if (t < 18)
             {
-                PlaySound(Properties.Resources.Countdown2, t);
+                PlaySound(Properties.Resources.Countdown2, Handle, t);
                 if (t <= 10) backgroundWorker2.RunWorkerAsync();
             }
             backgroundWorker3.RunWorkerAsync();
@@ -118,7 +135,7 @@ namespace Bomb
             {
                 int r = t - i;
                 label5.Tag = r;
-                if (r > 17) PlaySound(Properties.Resources.Countdown);
+                if (r > 17) PlaySound(Properties.Resources.Countdown, Handle);
                 SetText2Label5(r.ToString().PadLeft(4, '0'));
                 notifyIcon1.Text = r.ToString().PadLeft(4, '0') + "s";
                 switch (r)
@@ -132,17 +149,25 @@ namespace Bomb
                         backgroundWorker2.RunWorkerAsync();
                         break;
                     case 17:
-                        PlaySound(Properties.Resources.Countdown2);
+                        PlaySound(Properties.Resources.Countdown2, Handle);
                         break;
                 }
                 Thread.Sleep(1000);
             }
+#if !DEBUG
             BSoD();
+#endif
             Environment.Exit(0);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (as_dialog)
+            {
+                if (DialogResult != DialogResult.OK)
+                    DialogResult = DialogResult.Cancel;
+                return;
+            }
             Hide();
             if (button1.Enabled)
             {
@@ -372,7 +397,7 @@ namespace Bomb
             }
         }
 
-        private void PlaySound(UnmanagedMemoryStream resource, double start_at = -1)
+        public static void PlaySound(UnmanagedMemoryStream resource, IntPtr Handle, double start_at = -1)
         {
             MusicPlayer musicPlayer = new MusicPlayer("countdown");
             musicPlayer.Stop();
@@ -381,13 +406,18 @@ namespace Bomb
             ExtractFile(resource, path);
             musicPlayer.Open(path);
             if (start_at != -1) musicPlayer.JumpTo(18300 - (long)(start_at * 1000));
-            musicPlayer.Play((uint)Handle);   
+            musicPlayer.Play((uint)Handle);
         }
 
         private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
             Show();
             notifyIcon1.Visible = false;
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            int.TryParse(textBox1.Text, out time);
         }
     }
 }

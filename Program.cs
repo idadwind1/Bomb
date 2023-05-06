@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bomb
@@ -16,12 +13,21 @@ namespace Bomb
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (args.Length == 1 && int.TryParse(args[0], out int time))
+            int time = 0;
+            bool? full_screen = null, time_given = false;
+            foreach (var arg in args)
             {
-                Application.Run(new MainForm(time));
-                return;
+                if ((arg.ToLower() == "-f" || arg.ToLower() == "--fullscreen") && full_screen == null) full_screen = true;
+                else if ((arg.ToLower() == "-n" || arg.ToLower() == "--normal") && full_screen == null) full_screen = false;
+                else if (int.TryParse(arg, out time)) time_given = true;
             }
-            Application.Run(new MainForm());
+            if (full_screen ?? false)
+                if (time_given ?? false) Application.Run(new FullScreenForm(time));
+                else Application.Run(new FullScreenForm());
+            else
+                if (time_given ?? false) Application.Run(new MainForm());
+                else Application.Run(new MainForm(time));
+            Application.Run(new FullScreenForm());
         }
     }
 }
