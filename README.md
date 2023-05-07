@@ -1,6 +1,5 @@
 # Bomb
-> Bomb is a program that simulate a C4 bomb  
-
+**Bomb is a program that simulate a C4 bomb**  
 > **Warning**  
 > At the last, the program will cause a BSoD that is not harmful for your computer. If you want to recover, just simply reboot your computer
 
