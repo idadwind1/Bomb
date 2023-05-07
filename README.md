@@ -4,7 +4,8 @@ Bomb is a program that simulate a C4 bomb.
 - Shake window and cursor when 10 sec remaining
 - Can scared your friends
 - Plays sound
-Also passing parameters:
+
+Also passing parameters:  
 Bomb.exe [-f | -n] [time]
 
 |parameter|alias|fuction|
