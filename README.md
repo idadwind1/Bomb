@@ -6,6 +6,7 @@ Bomb is a program that simulate a C4 bomb.
 - Plays sound
 Also passing parameters:
 Bomb.exe [-f | -n] [time]
+
 |parameter|alias|fuction|
 |:---:|:---:|:---:|
 |`-f`|`--fullscreen`|Start the window on wallpaper|
