@@ -7,6 +7,7 @@ Bomb is a program that simulate a C4 bomb.
 Also passing parameters:
 Bomb.exe [-f | -n] [time]
 |parameter|alias|fuction|
+|:---:|:---:|:---:|
 |`-f`|`--fullscreen`|Start the window on wallpaper|
 |`-n`|`--normal`|Start widow with normal mode|
 |time||Preset the time, this parameter is a integer|
