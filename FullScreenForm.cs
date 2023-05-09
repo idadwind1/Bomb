@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using static Bomb.MainForm;
+using static Bomb.Program;
 
 namespace Bomb
 {

