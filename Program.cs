@@ -1,46 +1,52 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Bomb.Classes;
 
 namespace Bomb
 {
     internal static class Program
     {
         /// <summary>
-        /// 应用程序的主入口点。
+        /// Main entrance of the program。
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            int time = 0;
+            var time = 0;
             bool? full_screen = null, time_given = false;
             foreach (var arg in args)
             {
+                if (string.IsNullOrEmpty(arg)) continue;
                 if ((arg.ToLower() == "-f" || arg.ToLower() == "--fullscreen") && full_screen == null) full_screen = true;
                 else if ((arg.ToLower() == "-n" || arg.ToLower() == "--normal") && full_screen == null) full_screen = false;
+                else if (arg.ToLower() == "-h" || arg.ToLower() == "--help")
+                {
+                    MessageBox.Show(
+                        "Usage:\n" +
+                        "Bomb.exe [-f | --fullscreen | -n | --normal] [--BSoD] [time]\n" +
+                        "[-f | --fullscreen | -n | --normal]:\nTo decide whether the program starts in fullscreen mode or normal mode. Default: -n\n" +
+                        "[--BSoD]:\nTest BSoD Function.\n" +
+                        "[time]:\nDecide the countdown time of the bomb. Default: Unset (Won't auto start)", "Help"
+                        );
+                    return;
+                }
+                else if (arg.ToLower() == "--bsod") Functions.BSoD();
                 else if (int.TryParse(arg, out time)) time_given = true;
+                else
+                {
+                    MessageBox.Show(
+                    "Bomb:  Unexpected argument(s). See --help.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
             if (full_screen ?? false)
                 if (time_given ?? false) Application.Run(new FullScreenForm(time));
                 else Application.Run(new FullScreenForm());
             else
-                if (time_given ?? false) Application.Run(new MainForm());
-                else Application.Run(new MainForm(time));
-            Application.Run(new FullScreenForm());
-        }
-
-
-        [DllImport("ntdll.dll", SetLastError = true)]
-        private static extern void RtlSetProcessIsCritical(int v1, UInt32 v2, UInt32 v3);
-
-        public static void BSoD()
-        {
-            Process.EnterDebugMode();
-            RtlSetProcessIsCritical(1, 0, 0);
-            Process.GetCurrentProcess().Kill();
+                if (time_given ?? false) Application.Run(new MainForm(time));
+            else Application.Run(new MainForm());
         }
     }
 }

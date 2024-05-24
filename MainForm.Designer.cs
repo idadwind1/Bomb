@@ -30,86 +30,88 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
-            this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
-            this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.text_render = new System.ComponentModel.BackgroundWorker();
+            this.explode_lbl = new System.Windows.Forms.Label();
+            this.activate_btn = new System.Windows.Forms.Button();
+            this.explode2_lbl = new System.Windows.Forms.Label();
+            this.time_txtbox = new System.Windows.Forms.TextBox();
+            this.s_lbl = new System.Windows.Forms.Label();
+            this.time_lbl = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.shaker = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
             // notifyIcon1
             // 
             resources.ApplyResources(this.notifyIcon1, "notifyIcon1");
             this.notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseClick);
             // 
-            // backgroundWorker2
+            // text_render
             // 
-            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
+            this.text_render.DoWork += new System.ComponentModel.DoWorkEventHandler(this.txt_render_DoWork);
             // 
-            // backgroundWorker3
+            // explode_lbl
             // 
-            this.backgroundWorker3.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker3_DoWork);
+            resources.ApplyResources(this.explode_lbl, "explode_lbl");
+            this.explode_lbl.Name = "explode_lbl";
             // 
-            // label2
+            // activate_btn
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.activate_btn, "activate_btn");
+            this.activate_btn.Name = "activate_btn";
+            this.activate_btn.UseVisualStyleBackColor = true;
+            this.activate_btn.Click += new System.EventHandler(this.activate_btn_Click);
             // 
-            // button1
+            // explode2_lbl
             // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            resources.ApplyResources(this.explode2_lbl, "explode2_lbl");
+            this.explode2_lbl.Name = "explode2_lbl";
             // 
-            // label3
+            // time_txtbox
             // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
+            this.time_txtbox.BackColor = System.Drawing.SystemColors.Control;
+            this.time_txtbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            resources.ApplyResources(this.time_txtbox, "time_txtbox");
+            this.time_txtbox.Name = "time_txtbox";
+            this.time_txtbox.Enter += new System.EventHandler(this.time_txtbox_Enter);
+            this.time_txtbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            this.time_txtbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.time_txtbox_KeyPress);
+            this.time_txtbox.Leave += new System.EventHandler(this.time_txtbox_Leave);
             // 
-            // textBox1
+            // s_lbl
             // 
-            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Enter += new System.EventHandler(this.textBox1_Enter);
-            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
-            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-            this.textBox1.Leave += new System.EventHandler(this.textBox1_Leave);
+            resources.ApplyResources(this.s_lbl, "s_lbl");
+            this.s_lbl.Name = "s_lbl";
             // 
-            // label4
+            // time_lbl
             // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
-            // 
-            // label5
-            // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
+            resources.ApplyResources(this.time_lbl, "time_lbl");
+            this.time_lbl.Name = "time_lbl";
             // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.s_lbl);
+            this.panel1.Controls.Add(this.time_lbl);
+            this.panel1.Controls.Add(this.time_txtbox);
+            this.panel1.Controls.Add(this.explode2_lbl);
+            this.panel1.Controls.Add(this.activate_btn);
+            this.panel1.Controls.Add(this.explode_lbl);
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // shaker
+            // 
+            this.shaker.Interval = 1;
+            this.shaker.Tick += new System.EventHandler(this.shaker_Tick);
             // 
             // MainForm
             // 
@@ -121,7 +123,8 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainForm";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -129,17 +132,17 @@
         }
 
         #endregion
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker2;
-        private System.ComponentModel.BackgroundWorker backgroundWorker3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
+        private System.ComponentModel.BackgroundWorker text_render;
+        private System.Windows.Forms.Label explode_lbl;
+        private System.Windows.Forms.Button activate_btn;
+        private System.Windows.Forms.Label explode2_lbl;
+        private System.Windows.Forms.TextBox time_txtbox;
+        private System.Windows.Forms.Label s_lbl;
+        private System.Windows.Forms.Label time_lbl;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer shaker;
     }
 }
 

@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
+using Bomb.Classes;
 using static Bomb.MainForm;
-using static Bomb.Program;
 
 namespace Bomb
 {
@@ -58,7 +50,7 @@ namespace Bomb
 
         private void ShowMainForm()
         {
-            MainForm form = new MainForm(true);
+            var form = new MainForm(true);
             form.ShowDialog();
             if (form.DialogResult == DialogResult.Cancel)
             {
@@ -73,13 +65,13 @@ namespace Bomb
             programIntPtr = FindWindow("Progman", null);
             if (programIntPtr != IntPtr.Zero)
             {
-                IntPtr result = IntPtr.Zero;
+                var result = IntPtr.Zero;
                 SendMessageTimeout(programIntPtr, 0x52c, IntPtr.Zero, IntPtr.Zero, 0, 0x3e8, result);
                 EnumWindows((hwnd, lParam) =>
                 {
                     if (FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null) != IntPtr.Zero)
                     {
-                        IntPtr tempHwnd = FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null);
+                        var tempHwnd = FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null);
                         ShowWindow(tempHwnd, 0);
                     }
                     return true;
@@ -88,15 +80,15 @@ namespace Bomb
             SetParent(Handle, programIntPtr);
             WindowState = FormWindowState.Maximized;
             Show();
-            label1.Height = (int)(2.0 / 5 * Height);
-            label2.Height = Height - label1.Height;
+            explode_lbl.Height = (int)(2.0 / 5 * Height);
+            countdown_lbl.Height = Height - explode_lbl.Height;
         }
 
         private void FullScreenForm_Load(object sender, EventArgs e)
         {
-            label1.Font = new Font(label1.Font.FontFamily, label1.Width / (float)label1.Text.Length, label1.Font.Style, GraphicsUnit.Pixel);
-            label2.Text = string.Format("after {0}s", time.ToString().PadLeft(4, '0'));
-            label2.Font = new Font(label2.Font.FontFamily, (label2.Width / (float)label2.Text.Length) - 10, label2.Font.Style, GraphicsUnit.Pixel);
+            explode_lbl.Font = new Font(explode_lbl.Font.FontFamily, explode_lbl.Width / (float)explode_lbl.Text.Length, explode_lbl.Font.Style, GraphicsUnit.Pixel);
+            countdown_lbl.Text = string.Format("after {0}s", time.ToString().PadLeft(4, '0'));
+            countdown_lbl.Font = new Font(countdown_lbl.Font.FontFamily, (countdown_lbl.Width / (float)countdown_lbl.Text.Length) - 10, countdown_lbl.Font.Style, GraphicsUnit.Pixel);
             timer.Start();
         }
 
@@ -105,38 +97,39 @@ namespace Bomb
             if (time == 0)
             {
                 timer.Stop();
-                Environment.Exit(0);
 #if !DEBUG
-                BSoD();
+                Functions.BSoD();
 #endif
+                Environment.Exit(0);
             }
             time--;
             SetText2Label(string.Format("after {0}s", time.ToString().PadLeft(4, '0')));
             if (time % 2 == 0)
             {
                 BackColor = Color.Black;
-                label1.ForeColor = label2.ForeColor = Color.Red;
+                explode_lbl.ForeColor = countdown_lbl.ForeColor = Color.Red;
             }
             else
             {
                 BackColor = Color.Red;
-                label1.ForeColor = label2.ForeColor = Color.White;
+                explode_lbl.ForeColor = countdown_lbl.ForeColor = Color.White;
             }
             switch (time)
             {
                 case 0:
                     BackColor = Color.Black;
-                    label1.ForeColor = label2.ForeColor = Color.Red;
+                    explode_lbl.ForeColor = countdown_lbl.ForeColor = Color.Red;
                     SetText2Label("after 0000s");
                     break;
                 case 10:
-                    backgroundWorker1.RunWorkerAsync();
+                    shaker.RunWorkerAsync();
                     break;
                 case 17:
-                    new System.Threading.Thread(() => PlaySound(Properties.Resources.Countdown2, Handle));
+                    InvokeAction(() => SoundPlayer.PlaySound(Properties.Resources.Countdown2, Handle), this);
                     break;
                 default:
-                    PlaySound(Properties.Resources.Countdown, Handle);
+                    if (time >= 17)
+                        InvokeAction(() => SoundPlayer.PlaySound(Properties.Resources.Countdown, Handle), this);
                     break;
             }
         }
@@ -145,12 +138,12 @@ namespace Bomb
 
         private void SetText2Label(string text)
         {
-            if (label2.InvokeRequired)
+            if (countdown_lbl.InvokeRequired)
             {
-                SetTextCallBack stcb = new SetTextCallBack(SetText2Label);
+                var stcb = new SetTextCallBack(SetText2Label);
                 Invoke(stcb, new object[] { text });
             }
-            else label2.Text = text;
+            else countdown_lbl.Text = text;
         }
 
         protected override void DefWndProc(ref Message m)
@@ -158,7 +151,7 @@ namespace Bomb
             base.DefWndProc(ref m);
             if (m.Msg == 0x3B9)
             {
-                MusicPlayer musicPlayer = new MusicPlayer("countdown");
+                var musicPlayer = new SoundPlayer("countdown");
                 musicPlayer.Stop();
                 musicPlayer.Close();
             }
@@ -168,7 +161,7 @@ namespace Bomb
         {
             while (true)
             {
-                bool b = time <= 5;
+                var b = time <= 5;
                 //WindowShaker.ShakeCurrentWindows(b);
                 WindowShaker.ShakeMouse(b);
             }
