@@ -1,18 +1,22 @@
 # Bomb
-**Bomb is a program that simulate a C4 bomb**  
+****This program only works within Windows OS with administrator mode***  
+**Bomb is a program that simulate a C4 bomb, and actually causes a BSoD**  
 > **Warning**  
-> At the last, the program will cause a BSoD that is not harmful for your computer. If you want to recover, just simply reboot your computer
+> The program causes a BSoD that is not harmful to your device. If you want to restore, just simply reboot your device
 
-- Can runs in the background
-- Shake window and cursor when 10 sec remaining
-- Can scared your friends
-- Plays sound
+## Features
+- Runs in the background after closing the window
+- Shakes window and cursor while 10s is remaining
+- Can scares your friends
+- Plays sound like the real C4
 
-Also passing parameters:  
-Bomb.exe [`-f` | `-n`] [*time*]
+## Parameters
+Bomb.exe [`-f` | `--fullscreen` | `-n` | `--normal`] [`-h` | `--help`] [`-BSoD`] [*time*]
 
-|parameter|alias|fuction|
-|:---:|:---:|:---:|
-|`-f`|`--fullscreen`|Start the window on wallpaper|
-|`-n`|`--normal`|Start widow with normal mode|
-|*time*||Preset the time, this parameter is a integer|
+|Parameter|Alias|Fuction|Default|
+|:---:|:---:|:---:|:---:|
+|`-f`|`--fullscreen`|Start the window on wallpaper|*Off*|
+|`-n`|`--normal`|Start widow with normal mode|*On*|
+|`-h`|`--help`|Show help list|*None*|
+|`-BSoD`|*None*|Test BSoD function by directly do it|*Off*|
+|*time*||Preset the time, this parameter is a integer that >= 0 and <= 9999|*Unset*(Disabled preset)|
