@@ -11,7 +11,7 @@
 - Plays sound like the real C4
 
 ## Parameters
-Bomb.exe [`-f` | `-n`] [-BSoD] [*time*]
+Bomb.exe [`-f` | `-n`] [`-BSoD`] [*time*]
 
 |Parameter|Alias|Fuction|
 |:---:|:---:|:---:|
