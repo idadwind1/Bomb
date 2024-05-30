@@ -19,15 +19,29 @@ namespace Bomb
             foreach (var arg in args)
             {
                 if (string.IsNullOrEmpty(arg)) continue;
-                if ((arg.ToLower() == "-f" || arg.ToLower() == "--fullscreen") && full_screen == null) full_screen = true;
-                else if ((arg.ToLower() == "-n" || arg.ToLower() == "--normal") && full_screen == null) full_screen = false;
+                if (arg.ToLower() == "-f" || arg.ToLower() == "--fullscreen") 
+                    if (full_screen || full_screen == null) full_screen = true;
+                    else
+                    {
+                        MessageBox.Show("Bomb: Upexpected arguments. Fullscreen toggle cannot be used with normal toggle. See --help", "Error", MessageBoxButtons.OK, MessageBox);
+                        return;
+                    }
+                else if ((arg.ToLower() == "-n" || arg.ToLower() == "--normal") && full_screen == null)
+                    if (!full_screen || full_screen == null)
+                        full_screen = false;
+                    else
+                    {
+                        MessageBox.Show("Bomb: Upexpected arguments. Fullscreen toggle cannot be used with normal toggle. See --help", "Error", MessageBoxButtons.OK, MessageBox);
+                        return;
+                    }
                 else if (arg.ToLower() == "-h" || arg.ToLower() == "--help")
                 {
                     MessageBox.Show(
                         "Usage:\n" +
-                        "Bomb.exe [-f | --fullscreen | -n | --normal] [--BSoD] [time]\n" +
+                        "Bomb.exe [-f | --fullscreen | -n | --normal] [-h | --help] [--BSoD] [time]\n" +
                         "[-f | --fullscreen | -n | --normal]:\nTo decide whether the program starts in fullscreen mode or normal mode. Default: -n\n" +
-                        "[--BSoD]:\nTest BSoD Function.\n" +
+                        "[-h | --help]" +
+                        "[--BSoD]:\nTest BSoD Function by doing it.\n" +
                         "[time]:\nDecide the countdown time of the bomb. Default: Unset (Won't auto start)", "Help"
                         );
                     return;
