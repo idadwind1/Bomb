@@ -11,11 +11,12 @@
 - Plays sound like the real C4
 
 ## Parameters
-Bomb.exe [`-f` | `-n`] [`-BSoD`] [*time*]
+Bomb.exe [`-f` | `--fullscreen` | `-n` | `--normal`] [`-h` | `--help`] [`-BSoD`] [*time*]
 
-|Parameter|Alias|Fuction|
-|:---:|:---:|:---:|
-|`-f`|`--fullscreen`|Start the window on wallpaper|
-|`-n`|`--normal`|Start widow with normal mode|
-|`-BSoD`|*None*|Test BSoD function by directly do it|
-|*time*||Preset the time, this parameter is a integer that is >= 0 and <= 9999|
+|Parameter|Alias|Fuction|Default|
+|:---:|:---:|:---:|:---:|
+|`-f`|`--fullscreen`|Start the window on wallpaper|*Off*|
+|`-n`|`--normal`|Start widow with normal mode|*On*|
+|`-h`|`--help`|Show help list|*None*|
+|`-BSoD`|*None*|Test BSoD function by directly do it|*Off*|
+|*time*||Preset the time, this parameter is a integer that >= 0 and <= 9999|*Unset*(Disabled preset)|
