@@ -20,18 +20,18 @@ namespace Bomb
             {
                 if (string.IsNullOrEmpty(arg)) continue;
                 if (arg.ToLower() == "-f" || arg.ToLower() == "--fullscreen") 
-                    if (full_screen || full_screen == null) full_screen = true;
+                    if (full_screen.Value || full_screen == null) full_screen = true;
                     else
                     {
-                        MessageBox.Show("Bomb: Upexpected arguments. Fullscreen toggle cannot be used with normal toggle. See --help", "Error", MessageBoxButtons.OK, MessageBox);
+                        MessageBox.Show("Bomb: Upexpected arguments. Fullscreen toggle cannot be used with normal toggle. See --help", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 else if ((arg.ToLower() == "-n" || arg.ToLower() == "--normal") && full_screen == null)
-                    if (!full_screen || full_screen == null)
+                    if (!full_screen.Value || full_screen == null)
                         full_screen = false;
                     else
                     {
-                        MessageBox.Show("Bomb: Upexpected arguments. Fullscreen toggle cannot be used with normal toggle. See --help", "Error", MessageBoxButtons.OK, MessageBox);
+                        MessageBox.Show("Bomb: Upexpected arguments. Fullscreen toggle cannot be used with normal toggle. See --help", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 else if (arg.ToLower() == "-h" || arg.ToLower() == "--help")
