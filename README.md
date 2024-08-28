@@ -1,7 +1,7 @@
 # Bomb
 ****This program only works within Windows OS with administrator mode***  
 **Bomb is a program that simulate a C4 bomb, and actually causes a BSoD**  
-> **Warning**  
+> [!WARNING]
 > The program causes a BSoD that is not harmful to your device. If you want to restore, just simply reboot your device
 
 ## Features
